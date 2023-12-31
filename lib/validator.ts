@@ -1,6 +1,6 @@
 import * as z from "zod"
 
-export const eventFormSchema = z.object({
+export const eventFormSchema: any = z.object({
     title: z.string().min(3, {
         message: "Title must be at least 3 characters.",
     }),
@@ -16,7 +16,11 @@ export const eventFormSchema = z.object({
     }),
     imageUrl: z.string(),
     startDateTime: z.date(),
-    endDateTime: z.date(),
+    endDateTime: z.date().refine(() => {
+            return eventFormSchema.endDateTime >= eventFormSchema.startDateTime;
+        }, {
+        message: "End date must be after or equal to start date",
+    }),
     categoryId: z.string(),
     price: z.string(),
     isFree: z.boolean(),
