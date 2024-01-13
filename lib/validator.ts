@@ -16,13 +16,22 @@ export const eventFormSchema: any = z.object({
     }),
     imageUrl: z.string(),
     startDateTime: z.date(),
-    endDateTime: z.date().refine(() => {
-            return eventFormSchema.endDateTime >= eventFormSchema.startDateTime;
-        }, {
-        message: "End date must be after or equal to start date",
-    }),
+    endDateTime: z.date(),
     categoryId: z.string(),
     price: z.string(),
     isFree: z.boolean(),
     url: z.string().url()
 })
+
+
+/**
+    .refine(() => {
+        console.log(' eventFormSchema.startDateTime: ',  eventFormSchema);
+            console.log('eventFormSchema.endDateTime: ', eventFormSchema.endDateTime);
+        
+            return eventFormSchema.endDateTime >= eventFormSchema.startDateTime;
+        }, {
+        message: "End date must be after or equal to start date",
+    })
+
+ */
