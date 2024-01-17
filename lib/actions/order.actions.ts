@@ -92,6 +92,14 @@ export async function getOrdersByEvent({ searchString, eventId }: GetOrdersByEve
                 $unwind: '$event',
             },
             {
+                $lookup: {
+                    from: 'users',
+                    localField: 'buyer',
+                    foreignField: 'email',
+                    as: 'email',
+                },
+            },
+            {
                 $project: {
                     _id: 1,
                     totalAmount: 1,
@@ -99,8 +107,9 @@ export async function getOrdersByEvent({ searchString, eventId }: GetOrdersByEve
                     eventTitle: '$event.title',
                     eventId: '$event._id',
                     buyer: {
-                    $concat: ['$buyer.firstName', ' ', '$buyer.lastName'],
+                        $concat: ['$buyer.firstName', ' ', '$buyer.lastName'],
                     },
+                    email: '$buyer.email'
                 },
             },
             {
