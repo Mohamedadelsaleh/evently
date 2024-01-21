@@ -1,5 +1,5 @@
 'use client'
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
@@ -52,8 +52,22 @@ const EventForm = ({ userId, type, event, eventId } : EventFormProps) => {
     const form = useForm<z.infer<typeof eventFormSchema>>({
         resolver: zodResolver(eventFormSchema),
         defaultValues: initialValues
-    })
+    })    
     
+    const watchPrice = form.watch("price");
+    const watchIsFree = form.watch("isFree");
+    
+    const [isFreeDisabled, setIsFreeDisabled] = useState(false);
+    const [isPriceDisabled, setPriceDisabled] = useState(false);
+
+    useEffect(() => {
+        setIsFreeDisabled(!!watchPrice);
+    }, [watchPrice]);
+    
+    useEffect(() => {
+        setPriceDisabled(watchIsFree);
+    }, [watchIsFree]);
+
     async function onSubmit(values: z.infer<typeof eventFormSchema>) {
         let uploadedImageUrl = values.imageUrl;
 
@@ -240,7 +254,7 @@ const EventForm = ({ userId, type, event, eventId } : EventFormProps) => {
                                 <FormControl>
                                     <div className="flex-center h-[54px] w-full overflow-hidden rounded-full bg-grey-50 px-4 py-2">
                                         <Image src="/assets/icons/dollar.svg" alt="price" width={24} height={24} className="filter-grey" />
-                                        <Input type="number" placeholder="Price" {...field} className="p-p-regular-16 border-0 bg-grey-50 outline-offset-0 focus:border-0 focus-visible:ring-0 focus-visible:ring-offset-0" />
+                                        <Input type="number" placeholder="Price" {...field} className="p-p-regular-16 border-0 bg-grey-50 outline-offset-0 focus:border-0 focus-visible:ring-0 focus-visible:ring-offset-0" disabled={isPriceDisabled} />
                                         <FormField
                                             control={form.control}
                                             name="isFree"
@@ -253,6 +267,7 @@ const EventForm = ({ userId, type, event, eventId } : EventFormProps) => {
                                                                 id="isFree"
                                                                 onCheckedChange={field.onChange}
                                                                 checked={field.value}
+                                                                disabled= {isFreeDisabled}
                                                                 className="mr-2 h-5 w-5 border-2 border-primary-500 "
                                                             />
                                                         </div>
