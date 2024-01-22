@@ -13,6 +13,7 @@ const Footer = () => {
             width={128}
             height={38}
           />
+          <p>Powered by NextSphere </p>
         </Link>
         <p>2024 Evently. All rights reserved.</p>
       </div>

@@ -19,7 +19,9 @@ export const eventFormSchema = z.object({
   }),
   startDateTime: z.date(),
   endDateTime: z.date(),
-  categoryId: z.string(),
+  categoryId: z.string().min(1, {
+    message: "You must select Category."
+  }),
   price: z.string(),
   isFree: z.boolean(),
   url: z.string().url(),
